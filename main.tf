@@ -1,9 +1,9 @@
 provider "aws" {
-  region  = "eu-north-1"
+  region  = var.region
 }
 resource "aws_instance" "Monitoring" {
-ami = "ami-01e082ac2f79f3918" 
-instance_type = "t3.small"
+ami = var.ami
+instance_type = var.instance_type
 key_name = aws_key_pair.deployer.key_name
 vpc_security_group_ids = [aws_security_group.monitoring-sg.id]
  
