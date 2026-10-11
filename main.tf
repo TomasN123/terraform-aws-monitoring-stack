@@ -59,11 +59,17 @@ provisioner "file" {
   source      = "./docker/node-exporter-dashboard.json"
   destination = "/home/ec2-user/node-exporter-dashboard.json"
 }
+provisioner "file" {
+  source      = "./docker/nginx.conf"
+  destination = "/home/ec2-user/nginx.conf"
+}
 
 provisioner "remote-exec" {
   inline = [
-    "echo 'Waiting for Dockee'",
+    "echo 'Waiting for Docker'",
     "while ! sudo docker info > /dev/null 2>&1; do sleep 5; done",
+    "echo 'Waiting for Docker Compose'",
+    "while ! sudo docker-compose version > /dev/null 2>&1; do sleep 5; done",
     "echo 'Docker is ready!'",
     "sudo docker-compose -f /home/ec2-user/docker-compose.yml up -d"
    ]
@@ -107,13 +113,30 @@ resource "aws_security_group" "monitoring-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  ingress {
+
+/*   ingress {                //after using nginx it not necassary              
     from_port        = 3000   //Grafana
     to_port          = 3000
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
+  } */
+
+  ingress {
+    from_port        = 80   //Nginx
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
+  ingress {
+    from_port        = 443   //HTTPS
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
 }
 
 resource "aws_eip" "monitoring-eip" {
@@ -121,3 +144,15 @@ resource "aws_eip" "monitoring-eip" {
   domain   = "vpc"
 }
 
+data "aws_route53_zone" "link" {
+  name = var.domain_name
+  
+}
+
+resource "aws_route53_record" "link_record" {
+  zone_id = data.aws_route53_zone.link.zone_id
+  name = var.domain_name
+  type = "A"
+  ttl = "300"
+  records = [aws_eip.monitoring-eip.public_ip] 
+}
