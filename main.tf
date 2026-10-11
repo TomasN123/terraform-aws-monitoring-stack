@@ -36,13 +36,28 @@ connection {
   }
 
 provisioner "file" {
-  source      = "./docker-compose.yml"
+  source      = "./docker/docker-compose.yml"
   destination = "/home/ec2-user/docker-compose.yml"
 }
 
 provisioner "file" {
-  source      = "./prometheus.yml"
+  source      = "./docker/prometheus.yml"
   destination = "/home/ec2-user/prometheus.yml"
+}
+
+provisioner "file" {
+  source      = "./docker/grafana-datasource.yml"
+  destination = "/home/ec2-user/grafana-datasource.yml"
+}
+
+provisioner "file" {
+  source      = "./docker/grafana-dashboard.yml"
+  destination = "/home/ec2-user/grafana-dashboard.yml"
+}
+
+provisioner "file" {
+  source      = "./docker/node-exporter-dashboard.json"
+  destination = "/home/ec2-user/node-exporter-dashboard.json"
 }
 
 provisioner "remote-exec" {
