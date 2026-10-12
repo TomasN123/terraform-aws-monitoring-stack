@@ -64,6 +64,11 @@ provisioner "file" {
   destination = "/home/ec2-user/nginx.conf"
 }
 
+provisioner "file" {
+  source      = "./docker/init-letsencrypt.sh"
+  destination = "/home/ec2-user/init-letsencrypt.sh"
+}
+
 provisioner "remote-exec" {
   inline = [
     "echo 'Waiting for Docker'",
@@ -71,9 +76,12 @@ provisioner "remote-exec" {
     "echo 'Waiting for Docker Compose'",
     "while ! sudo docker-compose version > /dev/null 2>&1; do sleep 5; done",
     "echo 'Docker is ready!'",
+    "chmod +x /home/ec2-user/init-letsencrypt.sh",
+    "cd /home/ec2-user && sudo ./init-letsencrypt.sh",
     "sudo docker-compose -f /home/ec2-user/docker-compose.yml up -d"
+
    ]
-  
+
   
 }  
 }
@@ -156,3 +164,11 @@ resource "aws_route53_record" "link_record" {
   ttl = "300"
   records = [aws_eip.monitoring-eip.public_ip] 
 }
+
+
+
+
+
+
+
+

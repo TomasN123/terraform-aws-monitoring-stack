@@ -10,5 +10,5 @@ output "GRAFANA_IP_URL" {
 
 output "GRAFANA_HOSTNAME_URL" {
   description = "GRAFANA_URL"
-  value       = "http://cloud-telemetry.click"
+  value       = "https://cloud-telemetry.click"
 }
