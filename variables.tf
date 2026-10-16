@@ -27,3 +27,14 @@ variable "email" {
   description = "Email for SNS"
   default     = "3novotnytomas@gmail.com"
 }
+
+variable "ssh_public_key" {
+  type        = string
+  description = "SSH public key"
+}
+
+variable "ssh_private_key" {
+  type        = string
+  description = "SSH private key"
+  sensitive   = true
+}

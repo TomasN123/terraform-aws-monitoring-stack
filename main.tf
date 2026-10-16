@@ -40,7 +40,7 @@ resource "aws_volume_attachment" "EBSattachment" {
 
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
-  public_key = file(pathexpand("~/.ssh/aws-monitoring.pub"))
+  public_key = var.ssh_public_key
 }
 
 resource "aws_security_group" "monitoring-sg" {
@@ -112,7 +112,7 @@ resource "null_resource" "deploy" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = file(pathexpand("~/.ssh/aws-monitoring"))
+    private_key = var.ssh_private_key
     host        = aws_eip.monitoring-eip.public_ip
   }
 

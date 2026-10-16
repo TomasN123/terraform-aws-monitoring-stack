@@ -1,6 +1,9 @@
 image: 
   name: hashicorp/terraform:latest
   entrypoint: [""]
+variables:
+  TF_VAR_ssh_public_key: $SSH_PUBLIC_KEY
+  TF_VAR_ssh_private_key: $SSH_PRIVATE_KEY
 
 stages:
   - validate
