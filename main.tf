@@ -112,7 +112,7 @@ resource "null_resource" "deploy" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = var.ssh_private_key
+    private_key = file(var.ssh_private_key)
     host        = aws_eip.monitoring-eip.public_ip
   }
 
