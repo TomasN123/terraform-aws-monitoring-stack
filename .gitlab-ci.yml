@@ -1,0 +1,26 @@
+image: hashicorp/terraform:latest
+
+stages:
+  - validate
+  - plan
+  - apply
+
+validate:
+  stage: validate
+  script:
+    - terraform init
+    - terraform fmt -check
+    - terraform validate
+plan:
+  stage: plan
+  script:
+      - terraform init
+      - terraform plan
+apply:
+  stage: apply
+  script:
+    - terraform init
+    - terraform apply -auto-approve
+  when: manual
+
+
