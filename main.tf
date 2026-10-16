@@ -51,20 +51,14 @@ resource "aws_security_group" "monitoring-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  ingress {
+/*  ingress {
     from_port        = 9090 // Prometheus
     to_port          = 9090
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  ingress {
-    from_port        = 22 // SSH
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+
   ingress {
     from_port        = 9100 // Node Exporter
     to_port          = 9100
@@ -72,6 +66,23 @@ resource "aws_security_group" "monitoring-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+  
+    ingress {
+    from_port        = 3000 // Grafana
+    to_port          = 3000
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+*/
+  ingress {
+    from_port        = 22 // SSH
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
   ingress {
     from_port        = 80 // Nginx
     to_port          = 80
@@ -79,6 +90,7 @@ resource "aws_security_group" "monitoring-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+
   ingress {
     from_port        = 443 // HTTPS
     to_port          = 443

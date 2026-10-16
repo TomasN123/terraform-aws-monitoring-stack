@@ -19,7 +19,8 @@ services:
       - /data/grafana:/var/lib/grafana
     environment:
       - GF_SERVER_ROOT_URL=https://cloud-telemetry.click
-
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
       
   node_exporter: 
     image: prom/node-exporter:latest
