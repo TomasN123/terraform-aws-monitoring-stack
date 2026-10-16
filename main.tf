@@ -52,35 +52,35 @@ resource "aws_security_group" "monitoring-sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
   ingress {
-    from_port        = 9090  // Prometheus
+    from_port        = 9090 // Prometheus
     to_port          = 9090
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
   ingress {
-    from_port        = 22   // SSH
+    from_port        = 22 // SSH
     to_port          = 22
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
   ingress {
-    from_port        = 9100  // Node Exporter
+    from_port        = 9100 // Node Exporter
     to_port          = 9100
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
   ingress {
-    from_port        = 80   // Nginx
+    from_port        = 80 // Nginx
     to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
   ingress {
-    from_port        = 443  // HTTPS
+    from_port        = 443 // HTTPS
     to_port          = 443
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
@@ -95,7 +95,7 @@ resource "aws_eip" "monitoring-eip" {
 }
 
 data "aws_route53_zone" "link" {
-  name = var.domain_name  
+  name = var.domain_name
 }
 
 resource "aws_route53_record" "link_record" {
@@ -168,13 +168,13 @@ resource "null_resource" "deploy" {
 }
 
 resource "aws_sns_topic" "emailAlert" {
-name = "email-alert"
+  name = "email-alert"
 }
 
 resource "aws_sns_topic_subscription" "email_subscription" {
-topic_arn = aws_sns_topic.emailAlert.arn
-protocol = "email"
-endpoint = var.email
+  topic_arn = aws_sns_topic.emailAlert.arn
+  protocol  = "email"
+  endpoint  = var.email
 }
 
 resource "aws_cloudwatch_metric_alarm" "CPU-peak" {
@@ -189,7 +189,7 @@ resource "aws_cloudwatch_metric_alarm" "CPU-peak" {
   alarm_description         = "This metric monitors ec2 cpu utilization"
   insufficient_data_actions = []
   dimensions = {
-    InstanceId  = aws_instance.Monitoring.id
+    InstanceId = aws_instance.Monitoring.id
   }
   alarm_actions = [aws_sns_topic.emailAlert.arn]
 
