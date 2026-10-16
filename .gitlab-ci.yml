@@ -1,14 +1,17 @@
-image: 
+image:
   name: hashicorp/terraform:latest
   entrypoint: [""]
+
 variables:
   TF_VAR_ssh_public_key: $SSH_PUBLIC_KEY
   TF_VAR_ssh_private_key: $SSH_PRIVATE_KEY
 
 stages:
   - validate
+  - security
   - plan
   - apply
+  - destroy
 
 validate:
   stage: validate
@@ -16,16 +19,41 @@ validate:
     - terraform init
     - terraform fmt -check
     - terraform validate
+
+security:
+  stage: security
+  image:
+    name: aquasec/tfsec:latest
+    entrypoint: [""]
+  script:
+    - tfsec .
+  allow_failure: true
+
 plan:
   stage: plan
   script:
-      - terraform init
-      - terraform plan
+    - terraform init
+    - terraform plan -out=planfile
+  artifacts:
+    paths:
+      - planfile
+
 apply:
   stage: apply
   script:
     - terraform init
-    - terraform apply -auto-approve
+    - terraform apply planfile
+  environment:
+    name: production
+    url: https://cloud-telemetry.click
   when: manual
 
-
+destroy:
+  stage: destroy
+  script:
+    - terraform init
+    - terraform destroy -auto-approve
+  environment:
+    name: production
+    action: stop
+  when: manual
