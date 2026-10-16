@@ -1,14 +1,14 @@
-output "SERVER_IP" {
+output "server_ip" {
   description = "EIP"
   value       = aws_eip.monitoring-eip.public_ip
 }
 
-output "GRAFANA_IP_URL" {
-  description = "GRAFANA_URL"
-  value       = "http://${aws_eip.monitoring-eip.public_ip}:3000"
+output "grafana_url" {
+  description = "Grafana URL"
+  value       = "https://${aws_eip.monitoring-eip.public_ip}"
 }
 
-output "GRAFANA_HOSTNAME_URL" {
-  description = "GRAFANA_URL"
-  value       = "https://cloud-telemetry.click"
+output "grafana_domain" {
+  description = "Grafana Domain URL"
+  value       = "https://${var.domain_name}"
 }
