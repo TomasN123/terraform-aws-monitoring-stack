@@ -23,9 +23,23 @@ Name = "Terraform-EC2"
 }
 }
 
+resource "aws_ebs_volume" "volumeEBS" {
+availability_zone = aws_instance.Monitoring.availability_zone
+size = 20
+type = "gp2"
+tags = {
+Name = "EBSVolume"
+}
+}
+
+resource "aws_volume_attachment" "EBSattachment" {
+device_name = "/dev/sdf"
+volume_id = aws_ebs_volume.volumeEBS.id
+instance_id = aws_instance.Monitoring.id
+}
 
 resource "null_resource" "deploy" {
-depends_on = [ aws_instance.Monitoring, aws_eip.monitoring-eip ]
+depends_on = [ aws_instance.Monitoring, aws_eip.monitoring-eip, aws_volume_attachment.EBSattachment ]
 
 
 connection {
@@ -71,6 +85,14 @@ provisioner "file" {
 
 provisioner "remote-exec" {
   inline = [
+    "while [ ! -b /dev/xvdf ] && [ ! -b /dev/sdf ]; do sleep 2; done",
+    "DEVICE=$([ -b /dev/xvdf ] && echo /dev/xvdf || echo /dev/sdf)",
+    "sudo mkfs -t xfs $DEVICE",
+    "sudo mkdir -p /data",
+    "sudo mount $DEVICE /data",
+    "sudo mkdir -p /data/prometheus /data/grafana",
+    "sudo chown 65534:65534 /data/prometheus",
+    "sudo chown 472:472 /data/grafana",
     "echo 'Waiting for Docker'",
     "while ! sudo docker info > /dev/null 2>&1; do sleep 5; done",
     "echo 'Waiting for Docker Compose'",

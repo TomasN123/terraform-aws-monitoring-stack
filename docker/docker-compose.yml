@@ -6,7 +6,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
+      - /data/prometheus:/prometheus
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -16,7 +16,7 @@ services:
       - ./grafana-datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./grafana-dashboard.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
       - ./node-exporter-dashboard.json:/var/lib/grafana/dashboards/node-exporter-dashboard.json
-      - grafana_data:/var/lib/grafana
+      - /data/grafana:/var/lib/grafana
     environment:
       - GF_SERVER_ROOT_URL=https://cloud-telemetry.click
 
@@ -44,8 +44,3 @@ services:
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
-
-volumes:
-  prometheus_data:
-  grafana_data:
-  
