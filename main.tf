@@ -51,7 +51,7 @@ resource "aws_security_group" "monitoring-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-/*  ingress {
+  /*  ingress {
     from_port        = 9090 // Prometheus
     to_port          = 9090
     protocol         = "tcp"
