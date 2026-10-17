@@ -108,13 +108,13 @@ The plan file is passed as an artifact between stages, ensuring that the exact r
 
 ## User Access Flow
 
-![User Access Flow ](docs/user-access-flow.png)
+<img src="docs/user-access-flow.png" alt="User Access Flow" width="300">
 
 ---
 
 ## Alert Flow
 
-![Alarm Flow ](docs/alarm-flow.png)
+<img src="docs/alarm-flow.png" alt="User Access Flow" width="250">
 
 ---
 
